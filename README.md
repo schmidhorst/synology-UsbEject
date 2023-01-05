@@ -13,12 +13,12 @@ permission to perform its job an additional manual step is required after the in
 
 SSH to your NAS (as an admin user) and execute the following command:
 ```shell
-sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
+sudo cp /var/packages/UsbEject/conf/privilege.root /var/packages/UsbEject/conf/privilege
 ```
 Alternative to SSH:
 Go to Control Panel => Task Scheduler => Create => Scheduled Task => User-defined Script. In the "General" tab set any task name, select 'root' as user. In the "Task Settings" tab enter
 ```shell
-cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
+cp /var/packages/UsbEject/conf/privilege.root /var/packages/UsbEject/conf/privilege
 ```
 as "Run command". Finish it with OK. When you are requested to execute that command now during package installation, then go to the task scheduler, select that task and "Run" it.
 ## Credits and References
