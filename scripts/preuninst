@@ -1,0 +1,20 @@
+#!/bin/bash
+### This script will be executed when package uninstalled and upgraded.
+LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+echo "$(date '+%Y-%m-%d %H:%M:%S'): $0 ($SYNOPKG_PKGVER) started ...<br/>" >> "$LOG"
+
+TIMEOUT="10"
+# the STOP via start-stop-status script may have set the files in tmp to ...__STOP
+# Give the UsbEject.sh processes 10 s time to delete that and to terminate
+while [[ -n "$(ls -A "/var/packages/$SYNOPKG_PKGNAME/tmp")" ]] && [[ "$EJECT_TIMEOUT" -gt "0" ]]; do
+  sleep 1
+  ((TIMEOUT=TIMEOUT-1))
+done
+remaining="$(ls -A "/var/packages/$SYNOPKG_PKGNAME/tmp")"
+if [[ -n "$remaining" ]]; then
+  echo "$(date '+%Y-%m-%d %H:%M:%S'): Unclean uninst: Remaining files 'remaining' deleted<br/>" >> "$LOG"
+  rm -f "/var/packages/$SYNOPKG_PKGNAME/tmp/"*
+fi
+sleep 1
+echo "$(date '+%Y-%m-%d %H:%M:%S'): ... $0 done<br/>" >> "$LOG"
+exit 0

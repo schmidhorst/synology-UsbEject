@@ -1,0 +1,167 @@
+[
+{
+"step_title": "Licence",
+"invalid_next_disabled": true,
+"items": [{
+    "type": "multiselect",
+    "desc": "BSD 3-Clause License<br><br>Copyright (c) 2022-2023, Horst Schmid<br>All rights reserved.<br><br>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:<br>1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.<br>2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.<br>3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.<br><br>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "subitems": [
+     {
+      "key": "id1",
+      "desc": "Accepted",
+      "defaultValue": false,
+      "validator": {
+        "fn": "{return arguments[0];}"
+        }
+      }
+     ]
+    }
+   ]
+  }
+, {
+  "step_title": "Configuration",
+   "items": [
+    {"type": "textfield",
+    "desc": "After the drive connection there may be a short wait time required for proper operation",
+    "subitems": [
+      {
+      "key": "config_WAIT"
+      ,"desc": "Wait time (sec)"
+      ,"defaultValue": "@WAIT@"
+      ,"validator": { 
+        "allowBlank": false
+        ,"regex": {
+          "expr": "/^[0-9]+$/"
+          ,"errorText": "Enter a positive number"
+          }
+        }
+      }
+     ]
+    }
+  ,{
+    "type": "textfield"
+    ,"desc": "Please specify the timeout (in seconds) for trying to ejecting the device"
+    ,"subitems": [{ 
+      "key": "config_EJECT_TIMEOUT"
+      ,"desc": "Eject Timeout [s]"
+      ,"defaultValue": "@EJECT_TIMEOUT@"
+      ,"validator": { 
+        "allowBlank": false
+        ,"regex": {
+          "expr": "/^[0-9]+$/"
+          ,"errorText": "Enter a positive number"
+          }
+        }
+      }]
+    }  
+  ,{
+    "type": "textfield"
+    ,"desc": "<br/>Some drives are not automatically spinning down when idle. If a 'hdparm -S x <device>' command should be send to the device before unmounting to set it to sleep after a delay, enter here a value here. Allowed: x=0 ... 255.<br>x=1...240: x * 5 seconds, e.g. x=5: 25s, x=120: 10min,<br>x= 241...251: (x-240) * 30 min, e.g. 243 = 90min, 246=3h"
+    ,"subitems": [{
+      "key": "config_HDPARM_SPINDOWN"
+      ,"desc": "Time code parameter x"
+      ,"width": "360"
+      ,"defaultValue": "@HDPARM_SPINDOWN@"
+      ,"emptyText": "No hdparm command send"
+      ,"validator": {
+        "allowBlank": true
+        ,"regex": {
+          "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$/"
+          ,"errorText": "Enter a number 0..255"
+          }
+        }
+      }]
+    }
+  ,{
+    "type": "textfield",
+    "desc": "The size of the log files is automatically limitted. If the given line count is reached, the elder half is removed.",
+    "subitems": [
+      {
+        "key": "config_LOG_MAX_LINES"
+        ,"desc": "Max. line count"
+        ,"defaultValue": "@LOG_MAX_LINES@"
+        ,"validator": { 
+          "allowBlank": false
+          ,"regex": {
+            "expr": "/^[0-9]+$/"
+            ,"errorText": "Enter a positive number"
+            }
+          }
+        }
+      ]
+    }
+  ,{
+    "type": "textfield",
+    "desc": "Several debug log file message detail levels are available: 1 ... 8. The higher the value the more details.",
+    "subitems": [
+      {
+        "key": "config_LOGLEVEL"
+        ,"desc": "Log Detail Level"
+        ,"defaultValue": "@LOGLEVEL@"
+        ,"validator": { 
+          "allowBlank": false
+          ,"regex": {
+            "expr": "/^[0-8]$/"
+            ,"errorText": "Enter a positive number 1 ... 8"
+            }
+          }
+        }
+      ]
+    }
+  ,{
+    "type": "textfield"
+    ,"desc": "The package generates DSM desktop messages, which are shown on the desktop to a configurable user group or to a user. Prepend an @ to group names, e.g. @users for all users"
+    ,"subitems": [{
+      "key": "config_NOTIFY_USERS"
+      ,"desc": "Message display to"
+      ,"width": "360"
+      ,"defaultValue": "@NOTIFY_USERS@"
+      ,"validator": { "allowBlank": true }
+      }]
+    }
+  ,{
+    "type": "combobox",
+    "desc": "Use of 'Copy LED':<br/>0: LED is not used at all.<br/>1: Turn ON at drive attachment, OFF at eject<br/>2: Start flashing at drive attachment, OFF at eject<br/>3: Turn ON at attachment, OFF at a sucessfully eject, flashing if ejection failed",
+    "subitems": [{ 
+      "key": "config_LED_COPY",
+      "autoSelect": true,
+      "editable": false,
+      "desc": "Copy LED",
+      "defaultValue": "@LED_COPY@",
+      "width": "360",
+      "mode": "local",
+      "valueField": "myId",
+      "displayField": "displayText",
+      "store": {
+        "xtype": "arraystore",
+        "fields": ["myId", "displayText"],
+        "data": [[0, "0 Not used"], [1, "1 ON - OFF"], [2, "2 flash - OFF"], [3, "3 ON - OFF or flash"]]
+        }
+      }]
+    }  
+  ,{
+    "type": "multiselect",
+    "desc": "<br/>Beeper use by the script: Short beep at insert and eject, tripple long beep for an error",
+    "subitems": [{
+      "key": "config_BEEP",
+      "desc": "Beep at start and end",
+      "defaultValue": "@BEEP@"
+      }]
+    }
+  ]
+}
+,{
+  "step_title": "IMPORTANT: Manual Action Required!",
+  "items": [{
+    "type": "textfield",
+    "desc": "Third party packages are restricted by Synology in DSM 7.x! Since UsbEject does require root permission to perform its job an additional manual step is required after the installation.<br/><br/>Open a SSH command shell to your NAS (as an admin user) and execute the following command <b>after</b> the installation is finished.<br>Instead of via a SSH command window you can execute this command via a userdefined script (as user 'root'), generated via control panel, scheduled task. And run that after the finished installation.<br>You may copy the command now!",
+    "subitems": [{
+      "key": "ignore_value",
+      "desc": "Command",
+      "width": "440",
+      "defaultValue": "sudo cp /var/packages/UsbEject/conf/privilege.root /var/packages/UsbEject/conf/privilege"
+      }]
+    }]
+  }
+]
+

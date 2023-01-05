@@ -1,0 +1,53 @@
+#!/bin/bash
+# this is started already from /var/packages/<pckName>/scripts folder
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+user=$(whoami) # EnvVar $USER may be not well set
+echo "$(date "$DTFMT"): postinst V$SYNOPKG_PKGVER started as user '$user' ...<br/>" >> "$LOG"
+# need to fetch values entered by user from environment and put to the strings file for each language
+# configFilePathName="$(dirname "$0")/initial_config.txt" is no more available!
+items="$(env | grep "^config_")"
+# keys="config_WAIT config_BEEP config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS config_LOGLEVEL"
+mapfile -t itemArray < <(/bin/printf '%s' "$items")
+# echo "$(date "$DTFMT"): Config-Items from ENV: '${itemArray[*]}'" >> "$LOG"
+
+# config_LED_COPY, Copy LED usage:
+ # 0 = not used,
+ # 1 = on while script is running, off after end,
+ # 2 = flashing while script is running, off after the end,
+ # 4 = flashing if script result is neither 0 nor 100,
+ # 5 = on while running, flashing if script result is neither 0 nor 100, else off after end.
+
+
+echo "$(date "$DTFMT"): postinst: SYNOPKG_OLD_PKGVER='$SYNOPKG_OLD_PKGVER', SYNOPKG_PKGVER='$SYNOPKG_PKGVER'" >> "$LOG"
+rm -f "$SYNOPKG_PKGVAR/config"
+echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generated now ...<br/>" >> "$LOG"
+msg=""
+for item in "${itemArray[@]}"; do
+  # eval "$item" # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'", the ";99" is lost!???
+  key="${item%%=*}"
+  # Some values with, some without quotes, remove them:
+  val="$(sed -e 's/^\"//' -e 's/\"$//' <<<"${item#*=}")"
+  key2=${key#*config_}
+  if [[ -n "$key2" ]]; then
+    echo "$key2=\"${val}\"" >> "$SYNOPKG_PKGVAR/config"
+  fi
+  # echo "$item:  $key2=\"${val}\"" >> "$LOG"
+  msg="$msg  $key2='${val}'"
+done
+echo "$(date "$DTFMT"): from ENV extracted: $msg" >> "$LOG"
+
+chmod 755 "$SYNOPKG_PKGVAR/config"
+# Distinguish between a) new Installation, b) upgrade or c) change of settings
+action="Installation, upgrade or change of settings"
+if [[ -z "$SYNOPKG_OLD_PKGVER" ]]; then
+  action="Installation of V$SYNOPKG_PKGVER"
+elif [[ "$SYNOPKG_OLD_PKGVER" == "$SYNOPKG_PKGVER" ]]; then
+  action="Re-Installation (change of settings) of V$SYNOPKG_PKGVER"
+else
+  action="Upgrade from V$oldVers to V$SYNOPKG_PKGVER"
+fi
+
+echo "$(date "$DTFMT"): postinst done, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
+# next script may be post_upgrade
+exit 0

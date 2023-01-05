@@ -1,0 +1,4 @@
+[app1]
+title01="UsbEject"
+msg1="Achtung: Das als {0} gemountete Gerät konnte nicht ausgeworfen werden!!!!"
+msg2="Das als {0} gemountete Gerät wurde ausgeworfen. Auf dem Gerät sind noch {1}Bytes frei."

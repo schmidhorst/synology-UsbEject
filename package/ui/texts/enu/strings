@@ -1,0 +1,4 @@
+[app1]
+title01="UsbEject"
+msg1="Attention: The device mounted as {0} was requested to eject, but that failed!!!!"
+msg2="The device mounted as {0} was successfully ejected. On the device there are {1}Bytes free."

@@ -1,0 +1,22 @@
+{
+  ".url": {
+    "SYNO.SDS._ThirdParty.App.UsbEject": {
+      "title": "UsbEject",
+      "desc": "UsbEject for non-Admin users",
+			"appWindow": "SYNO.SDS._ThirdParty.App.UsbEject",
+      "allUsers": true,
+      "texts": "texts",
+      "protocol": "https",
+      "icon": "images/icon_{0}.png",
+			"type": "legacy",
+			"width": 300,
+			"height": 250,
+      "url": "/webman/3rdparty/UsbEject/index.cgi",
+      "preloadTexts": [
+        "app1:title01"
+        ,"app1:msg1"
+        ,"app1:msg2"
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+#!/bin/sh
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+user=$(whoami)
+echo -e "\n$(date "$DTFMT"): $0 ($SYNOPKG_PKGVER) started with account '$user' ..." >> "$LOG"
+# preupgrade starts from an temporary folder like /volume1/@tmp/synopkg/install.XDdQUB/scripts/preupgrade
+# Attention: if in the WIZARD_UIFILES folder a script is used for a dynamic ..._uifile, then it's not allowed to write here somthing to $SYNOPKG_TEMP_LOGFILE !!!
+
+#Developer Guide 7, Page 54, Script Execution Order
+#            Upgrade                         Installation     Uninstall
+#  ------------------------------------------------------------------------------------------
+#  newScript install_uifile.sh and upgrade_uifile.sh (if available)
+#  oldScript start-stop prestop (if running)                  start-stop prestop (if running)
+#  oldScript start-stop stop (if running)                     start-stop stop (if running)
+#  newScript preupgrade  
+#  oldScript                                                  preuninst
+#  @appstore/<app> and @apptemp/<app> are deleted
+#  oldScript                                                  postuninst
+#  newScript prereplace                      prereplace??
+#  newScript                                 preinst
+#  newScript                                 postinst  
+#  newScript postreplace        
+#  newScript postupgrade 
+#  newScript start-stop prestart             start-stop prestart
+#  newScript start-stop start                start-stop start
+  
+#clean-up temp if required
+myTmp="/tmp/$SYNOPKG_PKGNAME"  # better: SYNOPKG_TEMP_UPGRADE_FOLDER  !?
+if [ -d "$myTmp" ]; then
+  rm -r "$myTmp" # clean up may be done, but a copy of upgrade_uifile may be lost if created by script 
+fi
+mkdir -p "$myTmp"
+# cp -R "$SYNOPKG_PKGDEST/ui/texts" "$myTmp" # save the existing config before it's deleted
+# not needed as upgrade_uifile.sh was already running!
+
+echo "$(date '+%Y-%m-%d %H:%M:%S'): ... preupgrade done<br/>" >> "$LOG"
+exit 0

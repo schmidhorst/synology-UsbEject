@@ -1,0 +1,167 @@
+[
+{
+"step_title":"Lizenz",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"BSD 3-Klausel-Lizenz<br><br>Copyright (c) 2022-2023, Horst Schmid<br>Alle Rechte vorbehalten.<br><br>Die Weitergabe und Verwendung in Quell- und Binärform, mit oder ohne Änderungen, ist erlaubt, sofern die folgenden Bedingungen erfüllt sind:<br>1. Bei der Weitergabe des Quellcodes müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss beibehalten werden.<br>2. Bei der Weitergabe in binärer Form müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss in der Dokumentation und/oder anderen Materialien, die mit der Weitergabe bereitgestellt werden, wiedergegeben werden.<br>3. Weder der Name des Copyright-Inhabers noch die Namen der Mitwirkenden dürfen ohne ausdrückliche vorherige schriftliche Genehmigung verwendet werden, um von dieser Software abgeleitete Produkte zu unterstützen oder zu bewerben.<br><br> DIESE SOFTWARE WIRD VON DEN URHEBERN UND MITWIRKERN \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT UND JEGLICHE AUSDRÜCKLICHEN ODER STILLSCHWEIGENDEN GARANTIEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE STILLSCHWEIGENDEN GARANTIEN DER HANDELSÜBLICHKEIT UND DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK, WERDEN AUSGESCHLOSSEN. IN KEINEM FALL HAFTEN DER URHEBERRECHTSINHABER ODER DIE MITWIRKENDEN FÜR DIREKTE, INDIREKTE, ZUFÄLLIGE, BESONDERE, BEISPIELHAFTE SCHÄDEN ODER FOLGESCHÄDEN (EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE BESCHAFFUNG VON ERSATZGÜTERN ODER -DIENSTLEISTUNGEN, NUTZUNGS-, DATEN- ODER GEWINNVERLUSTE ODER GESCHÄFTSUNTERBRECHUNGEN), WIE AUCH IMMER DIESE VERURSACHT WURDEN UND AUF WELCHER HAFTUNGSTHEORIE SIE BERUHEN, OB DURCH VERTRAG, VERSCHULDENSUNABHÄNGIGE HAFTUNG ODER UNERLAUBTE HANDLUNG (EINSCHLIESSLICH FAHRLÄSSIGKEIT ODER ANDERWEITIG), DIE SICH IN IRGENDEINER WEISE AUS DER NUTZUNG DIESER SOFTWARE ERGEBEN, SELBST WENN AUF DIE MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WURDE.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Angenommen",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
+"step_title":"Konfiguration",
+"items": [
+{"type": "textfield",
+    "desc": "After the drive connection there may be a short wait time required for proper operation",
+"subitems": [
+{
+"key": "config_WAIT"
+,"desc":"Wartezeit (sec)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Eingabe einer positiven Zahl"
+}
+}
+}
+]
+}
+  ,{
+    "type": "textfield"
+    ,"desc": "Bitte geben Sie die Timeout-Zeit (in Sekunden) für die Eject-Versuche an"
+    ,"subitems": [{ 
+      "key": "config_EJECT_TIMEOUT"
+      ,"desc": "Eject Timeout [s]"
+      ,"defaultValue": "@EJECT_TIMEOUT@"
+      ,"validator": { 
+        "allowBlank": false
+        ,"regex": {
+          "expr": "/^[0-9]+$/"
+          ,"errorText": "Bitte eine positive Zahl angeben"
+          }
+        }
+      }]
+    }  
+  ,{
+    "type": "textfield"
+    ,"desc": "<br/>Some drives are not automatically spinning down when idle. If a 'hdparm -S x <device>' command should be send to the device before unmounting to set it to sleep after a delay, enter here a value here. Allowed: x=0 ... 255.<br>x=1...240: x * 5 seconds, e.g. x=5: 25s, x=120: 10min,<br>x= 241...251: (x-240) * 30 min, e.g. 243 = 90min, 246=3h"
+    ,"subitems": [{
+      "key": "config_HDPARM_SPINDOWN"
+      ,"desc": "Time code parameter x"
+      ,"width": "360"
+      ,"defaultValue": "@HDPARM_SPINDOWN@"
+      ,"emptyText": "No hdparm command send"
+      ,"validator": {
+        "allowBlank": true
+        ,"regex": {
+          "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$/"
+          ,"errorText": "Enter a number 0..255"
+          }
+        }
+      }]
+    }
+,{
+"type": "textfield",
+"desc":"Die Größe der Protokolldateien wird automatisch begrenzt. Wenn die angegebene Zeilenzahl erreicht ist, wird die ältere Hälfte entfernt.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES"
+,"desc":"Max. Zeilenzahl"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Geben Sie eine positive Zahl ein"
+}
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Es sind mehrere Detailstufen für die Debug-Protokolldatei verfügbar: 1 ... 8. Je höher der Wert, desto mehr Details.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Log Detail Level"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Eingabe einer positiven Zahl 1 ... 8"
+}
+}
+}
+]
+}
+,{
+"type": "textfield"
+,"desc":"Das Paket erzeugt DSM-Desktop-Nachrichten, die auf dem Desktop einer konfigurierbaren Benutzergruppe oder einem Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer"
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Anzeige der Nachricht an"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+,{
+"type": "combobox",
+"desc":"Verwendung der 'Kopier-LED':<br/>0: LED wird überhaupt nicht verwendet.<br/>1: EIN beim Einstecken, AUS beim Auswerfen<br/>2: Blinken beim Einstecken, AUS beim Auswerfen<br/>3: EIN beim Einstecken, AUS beim erfolgreichen Auswerfen, blinken bei fehlgeschlagenem Auswerfen",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"LED kopieren",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 unbenutzt"], [1, "1 EIN - AUS"], [2, "2 Blinken - AUS"], [3, "3 EIN - AUS or blinken"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Piepserverwendung durch das Skript: Kurzer Piepton beim Einstecken und auswerfen, dreimaliger langer Piepton bei einem Fehler",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Signalton bei Start und Ende",
+"defaultValue": "@BEEP@"
+}]
+    }
+  ]
+}
+,{
+"step_title":"WICHTIG: Manueller Eingriff erforderlich!",
+"items": [{
+"type": "textfield",
+"desc":"Pakete von Drittanbietern werden von Synology in DSM 7.x eingeschränkt! Da UsbEject zur Ausführung seiner Aufgabe Root-Rechte benötigt, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.<br/><br/>Öffnen Sie eine SSH-Befehlsshell auf Ihrem NAS (als Admin-Benutzer) und führen Sie den folgenden Befehl <b>nach</b> Beendigung der Installation aus.<br>Anstatt über ein SSH-Befehlsfenster können Sie diesen Befehl auch über ein benutzerdefiniertes Skript (als Benutzer 'root') ausführen, das über die Systemsteuerung, geplante Aufgabe, erstellt wurde. Und dieses nach der fertigen Installation ausführen.<br>Sie können den Befehl jetzt kopieren!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Befehl",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/UsbEject/conf/privilege.root /var/packages/UsbEject/conf/privilege"
+}]
+}]
+}
+]
+

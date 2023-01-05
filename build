@@ -1,0 +1,154 @@
+#!/bin/bash
+# generate the *.spk file (without the help of the toolkit)
+
+# non-UTF-8 files with international characters and Windows-CR-LF may cause problems. Detect such files ...
+# recursive calls for sub directories
+checkCoding() {
+  for f in "${1}"*; do
+    if [[ -d "$f" ]]; then
+      checkCoding "${f}/"
+    else
+      res=$(file -b "$f")
+      ret=$?
+      # echo "  File coding check '$f' result $ret: $res"
+      if [[ $res == *"CRLF line terminators"* ]]; then
+        echo "  File coding check '$f' result $ret: $res"
+        echo "  ######## Windows line terminator need to be converted to Unix! #########"
+        ((errCnt=errCnt+1))
+      elif [[ "$res" == *"ISO-8859 text"* ]]; then
+        echo "  File coding check '$f' result $ret: $res"
+        echo "  ######## Please convert to UTF-8! ##########"
+        ((errCnt=errCnt+1))
+      elif [[ "$res" == *"PNG image"* ]]; then
+        echo "  File coding check PNG image '$f' result $ret: $res"
+        # are there some PNG formats which need to be converted?
+      fi
+    fi
+  done
+}
+
+
+######################### start ###########################
+
+SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+PKG_DIR="$SCRIPTPATHTHIS"
+cd "$PKG_DIR"
+echo "'$0' started ..."
+
+
+# non-UTF-8 files with international characters and Windows-CR-LF may cause problems.
+# Detect such files by checking all source files ...
+echo "File coding check ..."
+# checkCoding needs the 'file' command, which is e.g. in "SynoCli File Tools":
+res=$(which "file")
+if [[ -n "$res" ]]; then
+  checkCoding "$SCRIPTPATHTHIS/"
+else
+  echo "=================================================================================================================="
+  echo "Linux command 'file' is not available. Checking source files for correct line terminator and UTF-8-coding skipped!"
+  echo "The 'file' command is part of the package 'SynoCli File Tools'! You may install that from https://packages.synocommunity.com/"
+  echo "=================================================================================================================="
+fi
+echo "... finished file coding check"
+
+# "$(./translate.sh)" # Update tranlations via DeepL if necessary
+# /bin/bash ./translate.sh
+ret=$?
+if [[ "$ret" -gt 0 ]]; then
+  exit $ret
+fi
+
+if [[ -f "INFO.sh" ]]; then
+  infoFile="INFO.sh"
+elif [[ -f "INFO" ]]; then
+  infoFile="INFO"
+else
+  echo "=================================================================================================================="
+  echo "Error: Neither the file INFO.sh nor INFO foun in folder '$PKG_DIR'"
+  echo "=================================================================================================================="
+  exit 2
+fi
+### get the version and the package name from INFO.sh or INFO:
+line=$(grep -i "VERSION=" "$infoFile")
+echo "line with version: '$line'"
+line="${line^^}" # toUpper
+eval "$line"
+line="$(grep -i "package=" "$infoFile")"
+line="${line#*package=\"}"
+pck="${line%%\"*}"
+# pck=$(grep -i "package=" "$infoFile" | /bin/sed 's/package=//i' | /bin/sed 's/"//g')
+echo "pck='$pck'"
+dsmuidir=""
+line="$(grep "dsmuidir=" "$infoFile")" # most often dsmuidir="ui"
+eval "$line"
+echo "dsmuidir='$dsmuidir'"
+
+# Check for well formed JSON:
+errCnt=0
+for f1 in "package/$dsmuidir/config" "package/$dsmuidir/index.conf" conf/*
+# for f1 in package/$dsmuidir/config package/$dsmuidir/index.conf conf/* WIZARD_UIFILES/uninstall_uifile* WIZARD_UIFILES/wizard_*.json
+do
+  f2="$SCRIPTPATHTHIS/$1$f1"
+  if [[ -f "$f2" ]]; then
+    # res=$(cat "$f2" | python3 -mjson.tool)
+    res=$(python3 -mjson.tool < "$f2")
+    ret=$?
+    echo "JSON syntax check '$f2': $ret"
+    if [[ "$ret" != 0 ]]; then
+      echo "#### !!!!!! JSON syntax error in '$f2'!!!!! #####"
+      ((errCnt=errCnt+1))
+    fi
+  else
+    echo "$f2 not found!"
+    ((errCnt=errCnt+1))
+  fi
+done
+
+if [[ "$errCnt" -gt "0" ]]; then
+  echo "Stopped due to errCnt=$errCnt"
+  exit 2
+fi
+
+
+echo "building V$VERSION of $pck ..."
+# echo "Actual working directory is $PKG_DIR"
+rm -f "package.tgz"
+rm -f "${pck}-$VERSION.spk"
+
+chmod -R 777 package
+echo "building package.tgz ..."
+tar --exclude="*/@eaDir" --owner=0 --group=0 -czvvf package.tgz -C package/ "$pck.sh" bin "$dsmuidir" common rules udev
+path="package/$dsmuidir/images"
+cp -av "$path/icon_64.png" "PACKAGE_ICON.PNG"
+p256=""
+if [[ -f "$path/icon_256.png" ]]; then
+  p256="PACKAGE_ICON_256.PNG"
+  cp -av "$path/icon_256.png" "PACKAGE_ICON_256.PNG"
+fi
+chmod 755 INFO.sh
+if [[ -f INFO.sh ]]; then
+  rm -f "INFO"
+  echo "Executing now INFO.sh to build INFO file ..."
+  source INFO.sh NoToolkitScripts
+  chmod 755 INFO
+  echo "create_time=\"$(date '+%Y-%m-%d %T')\"" >> INFO
+  echo "... INFO.sh done."
+fi
+echo "... package.tgz done"
+
+echo "building ${pck}-$VERSION.spk ..."
+chmod 700 package.tgz
+# --exclude="Thumbs.db" --exclude="Browse.plb"
+license=""
+if [[ -f "LICENSE*" ]]; then
+  license="LICENSE*"
+fi
+tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO CHANGELOG $license PACKAGE_ICON.PNG "$p256" WIZARD_UIFILES conf scripts package.tgz
+
+rm "package.tgz"
+rm "INFO"
+rm "PACKAGE_ICON.PNG"
+rm "PACKAGE_ICON_256.PNG"
+# chmod 777 ${pck}-$VERSION.spk
+echo "... $0 done, file $SCRIPTPATHTHIS/${pck}-$VERSION.spk generated!"
+

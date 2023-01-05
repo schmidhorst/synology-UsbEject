@@ -1,0 +1,6 @@
+#!/bin/bash
+# executed after postinst!
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+echo "$(date "$DTFMT"): postupgrade V$SYNOPKG_PKGVER: Nothing to do!<br/>" >> "$LOG"
+exit 0
