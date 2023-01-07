@@ -1,7 +1,7 @@
 # Synology USB Storage Eject for Non-Admin Users
-By default Synology allows only users with administration rights to securely eject USB storage devices. Users without administrator permissions don't have any eject buttons or eject menu items. To unplug such devices without having them previously unmounted, may lead to corrupted data of corrupted file system and produces a warning on the DSM system.
-This package allows userers without administration rights to safely eject USB devices:
-![user view](https://github.com/schmidhorst/synology-UsbEject/blob/main/ScreenshotUser.png?raw=true)
+By default, Synology allows only users with administration rights to securely eject USB storage devices. Users without administrator permissions don't have any eject buttons or eject menu items. Unplugging such devices without having them previously unmounted, may lead to corrupted data of corrupted file system and produces a warning on the DSM system.
+This package allows userers without administration rights to safely eject USB devices:  
+![user view](https://github.com/schmidhorst/synology-UsbEject/blob/main/ScreenshotUser.png?raw=true)  
 The administrator view gives more info and allows to set a filter:
 ![user view](https://github.com/schmidhorst/synology-UsbEject/blob/main/ScreenshotAdmin.png?raw=true)
 
@@ -26,6 +26,8 @@ Go to Control Panel => Task Scheduler => Create => Scheduled Task => User-define
 ```shell
 cp /var/packages/UsbEject/conf/privilege.root /var/packages/UsbEject/conf/privilege
 ```
-as "Run command". Finish it with OK. When you are requested to execute that command now during package installation, then go to the task scheduler, select that task and "Run" it.
+as "Run command". Finish it with OK. When you are requested to execute that command now during package installation, then go to the task scheduler, select that task and "Run" it.  
+It's suggested to drag the UsbEject icon from the main menu to the desktop for easier access.
+
 ## Credits and References
 - This package was developed as a modification of [Synology Autorun](https://github.com/schmidhorst/synology-autorun/)
