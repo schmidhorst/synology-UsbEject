@@ -51,3 +51,4 @@ fi
 echo "$(date "$DTFMT"): postinst done, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
 # next script may be post_upgrade
 exit 0
+

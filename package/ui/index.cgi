@@ -113,11 +113,11 @@ fi
 
 #appCfgDataPath=$(find /volume*/@appdata/${app_name} -maxdepth 0 -type d)
 appCfgDataPath="/var/packages/${app_name}/var"
-appTmpPath="/var/packages/${app_name}/tmp"
 if [ ! -d "${appCfgDataPath}" ]; then
   logInfo 1 "$(basename "$0"), app var folder '$appCfgDataPath' not found!"
   # exit
 fi
+appTmpPath="/var/packages/${app_name}/tmp"
 if [ ! -d "${appTmpPath}" ]; then
   logInfo 1 "$(basename "$0"), app tmp folder '$appTmpPath' not found!"
   # exit

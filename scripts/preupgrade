@@ -33,5 +33,5 @@ mkdir -p "$myTmp"
 # cp -R "$SYNOPKG_PKGDEST/ui/texts" "$myTmp" # save the existing config before it's deleted
 # not needed as upgrade_uifile.sh was already running!
 
-echo "$(date '+%Y-%m-%d %H:%M:%S'): ... preupgrade done<br/>" >> "$LOG"
+echo "$(date "$DTFMT"): ... preupgrade done<br/>" >> "$LOG"
 exit 0

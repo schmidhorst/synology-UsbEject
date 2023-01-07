@@ -16,10 +16,10 @@ WAIT=0 # wait (seconds) time after mountpoint found
 # if the last line in "$SCRIPT_EXEC_LOG" contains $1, then replace that line by $2, else append $2
 # This is to reduce the number of entries in $SCRIPT_EXEC_LOG
 replaceLastLogLineIfSimilar() {
-  latestEntry="$(tail -1 "$SCRIPT_EXEC_LOG")"
+  latestEntry="$(/bin/tail -1 "$SCRIPT_EXEC_LOG")"
   if [[ "$latestEntry" == *"$1"* ]]; then
-    lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
-    sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"
+    lineCount=$(/bin/wc -l < "$SCRIPT_EXEC_LOG")
+    /bin/sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"
     /bin/echo "$(date "$DTFMT"): $2" >> "$SCRIPT_EXEC_LOG"
     logInfo 8 "Last Entry in SCRIPT_EXEC_LOG replaced"
   else
@@ -75,34 +75,34 @@ COUNT=0
 SCRIPT_EXEC_LOG="$APPDATA/execLog" # logfile with 1 ..2 lines per inserted and ejected USD storage drive
 if [[ -f "$SCRIPT_EXEC_LOG" ]]; then
   logInfo 6 "File $SCRIPT_EXEC_LOG exists"
-  lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
+  lineCount=$(/bin/wc -l < "$SCRIPT_EXEC_LOG")
   logInfo 6 "The log file '$SCRIPT_EXEC_LOG' has $lineCount lines, configured maximum is $LOG_MAX_LINES"
   # /bin/echo "lineCount=$lineCount"
   if [[ "$lineCount" -gt "$LOG_MAX_LINES" ]]; then
     newLineCount=$((LOG_MAX_LINES / 2))
     delLines=$((lineCount - newLineCount))
-    sed -i -e "1,${delLines}d" "$SCRIPT_EXEC_LOG"
+    /bin/sed -i -e "1,${delLines}d" "$SCRIPT_EXEC_LOG"
     logInfo 4 "The log file '$SCRIPT_EXEC_LOG' was trimmed from $lineCount to $newLineCount lines"
   fi
 else
-  touch "$SCRIPT_EXEC_LOG" # created an empty file
-  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
-  chmod 644 "$SCRIPT_EXEC_LOG"
+  /bin/touch "$SCRIPT_EXEC_LOG" # created an empty file
+  /bin/chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
+  /bin/chmod 644 "$SCRIPT_EXEC_LOG"
 fi
 
 if [[ -f "$LOG" ]]; then
-  lineCount=$(wc -l < "$LOG")
+  lineCount=$(/bin/wc -l < "$LOG")
   logInfo 6 "The log file '$LOG' has $lineCount lines, configured maximum is $LOG_MAX_LINES"
   if [[ $lineCount -gt "$LOG_MAX_LINES" ]]; then
     newLineCount=$((LOG_MAX_LINES / 2))
     delLines=$((lineCount - newLineCount))
-    sed -i -e "1,${delLines}d" "$LOG"
+    /bin/sed -i -e "1,${delLines}d" "$LOG"
     logInfo 4 "The log file '$LOG' was trimmed from $lineCount to $newLineCount lines"
   fi
 else
-  touch "$LOG"
-  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG"
-  chmod 644 "$LOG"
+  /bin/touch "$LOG"
+  /bin/chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG"
+  /bin/chmod 644 "$LOG"
 fi
 
 # try to get the mount path
@@ -138,11 +138,11 @@ fi
 usbNo=${MOUNTPATH%/*} # remove /usbshare from e.g. /volumeUSB2/usbshare
 usbNo=${usbNo#*volumeUSB}
 # /bin/echo "usbNo=$usbNo"
-diskID1=$(grep "${usbNo}=" "/usr/syno/etc/usbno_guid.map") # e.g. 14="20190123456780"
+diskID1=$(/bin/grep "${usbNo}=" "/usr/syno/etc/usbno_guid.map") # e.g. 14="20190123456780"
 diskID2=${diskID1%0\"}  # remove trailing '0"'
 diskID2=${diskID2#*=\"} # Remove leading Quote, now e.g. "2019012345678"
 # /bin/echo "diskID=$diskID"
-diskName=$(/usr/syno/bin/lsusb | grep "$diskID2") # e.g. "|__2-2.2 1234:5678:90AB 00 3.00 5000MBit/s 8mA 1IF (...)"
+diskName=$(/usr/syno/bin/lsusb | /bin/grep "$diskID2") # e.g. "|__2-2.2 1234:5678:90AB 00 3.00 5000MBit/s 8mA 1IF (...)"
  # lsusb -cI
 diskPort="${diskName#*|__}"
 diskPort="${diskPort%% *}" # e.g. 2-2.2

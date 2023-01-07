@@ -74,10 +74,10 @@ if [[ -n "$line0" ]] && [[ "$line0" == *"/webman/3rdparty/"* ]] && [[ ! "${line0
 fi
 
 # displayname="Desktop Message Package for DSM 7.x" # if not set then $package will be used as displayname, fetched from lang.txt file
-# displayname_enu="Desktop Message Package for DSM 7.x"
+# displayname_enu="Desktop Message Package for DSM 7.x" #  fetched from lang.txt file??
 # displayname_ger="Desktop Meldungs Paket für DSM 7.x"
 # Html-Tags like e.g. <br/> are nor working in the description, line breaks like \n also not. For double quotes use e.g. two single quotes. Or ????
-description="Allows non-admin users to eject USB storage devices."
+description="Allows non-admin users to eject USB storage devices." #  fetched from lang.txt file??
 description_enu="Allows non-admin users to eject USB storage devices."
 description_ger="Ermöglicht nicht-Admin-Benutzern USB-Speicher auszuwerfen"
 

@@ -2,5 +2,6 @@
 
 LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 echo -e "\n$(date '+%Y-%m-%d %H:%M:%S'): $0: Start and finished" >> $LOG
+# deletion of logfiles, configuration may be added here
 
 exit 0

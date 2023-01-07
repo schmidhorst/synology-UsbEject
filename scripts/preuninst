@@ -1,7 +1,7 @@
 #!/bin/bash
 ### This script will be executed when package uninstalled and upgraded.
 LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
-echo "$(date '+%Y-%m-%d %H:%M:%S'): $0 ($SYNOPKG_PKGVER) started ...<br/>" >> "$LOG"
+echo "$(date '+%Y-%m-%d %H:%M:%S'): $0 (V$SYNOPKG_PKGVER) started ...<br/>" >> "$LOG"
 
 TIMEOUT="10"
 # the STOP via start-stop-status script may have set the files in tmp to ...__STOP

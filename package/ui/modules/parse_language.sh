@@ -15,10 +15,10 @@
 #  Author 1:    QTip from the german Synology support forum          #
 #  Copyright:   2016-2018 by QTip                                    #
 #  Author 2:    Modified 2022 by Tommes                              #
-#  Author 3:    Horst Schmid, 2022                                   #
+#  Author 3:    Horst Schmid, 2023                                   #
 #  License:     GNU GPLv3                                            #
 #  ----------------------------------------------------------------  #
-#  Version:     2022-11-25                                           #
+#  Version:     2023-01-06                                           #
 #********************************************************************#
 bDebugPL=0
 DTFMT="+%Y-%m-%d %H:%M:%S"

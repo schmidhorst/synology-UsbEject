@@ -11,7 +11,7 @@ body {
 
 table, th, td {
   border: 1px solid black;
-  border-collapse:collapse;
+  border-collapse: collapse;
 }
 
 th, td {
@@ -77,5 +77,4 @@ h3 {
 	padding-top: 2px;
 	width: auto;
 }
-
 
